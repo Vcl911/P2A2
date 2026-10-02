@@ -1,0 +1,130 @@
+#Antonio Julian Perdomo Peralta 6097974
+
+class Nodo:
+    def __init__(self, clave):
+        self.clave = clave
+        self.izquierdo = None
+        self.derecho = None
+
+class ArbolBinario:
+    def __init__(self):
+        self.raiz = None
+
+    def insertar(self, clave):
+        self.raiz = self.insertarRec(self.raiz, clave)
+
+    def insertarRec(self, raiz, clave):
+        if raiz == None:
+            return Nodo(clave)
+        if clave < raiz.clave:
+            raiz.izquierdo = self.insertarRec(raiz.izquierdo, clave)
+        elif clave > raiz.clave:
+            raiz.derecho = self.insertarRec(raiz.derecho, clave)
+        return raiz
+
+    def inorden(self):
+        self.inordenRec(self.raiz)
+
+    def inordenRec(self, raiz):
+        if raiz != None:
+            self.inordenRec(raiz.izquierdo)
+            print(raiz.clave, end=" ")
+            self.inordenRec(raiz.derecho)
+
+    def preorden(self):
+        self.preordenRec(self.raiz)
+
+    def preordenRec(self, raiz):
+        if raiz != None:
+            print(raiz.clave, end=" ")
+            self.preordenRec(raiz.izquierdo)
+            self.preordenRec(raiz.derecho)
+
+    def postorden(self):
+        self.postordenRec(self.raiz)
+
+    def postordenRec(self, raiz):
+        if raiz != None:
+            self.postordenRec(raiz.izquierdo)
+            self.postordenRec(raiz.derecho)
+            print(raiz.clave, end=" ")
+
+    def buscar(self, clave):
+        return self.buscarRec(self.raiz, clave)
+
+    def buscarRec(self, raiz, clave):
+        if raiz == None:
+            return False
+        if clave == raiz.clave:
+            return True
+        if clave < raiz.clave:
+            return self.buscarRec(raiz.izquierdo, clave)
+        else:
+            return self.buscarRec(raiz.derecho, clave)
+
+    def eliminar(self, clave):
+        self.raiz = self.eliminarRec(self.raiz, clave)
+
+    def eliminarRec(self, raiz, clave):
+        if raiz == None:
+            return raiz
+
+        if clave < raiz.clave:
+            raiz.izquierdo = self.eliminarRec(raiz.izquierdo, clave)
+        elif clave > raiz.clave:
+            raiz.derecho = self.eliminarRec(raiz.derecho, clave)
+        else:
+            if raiz.izquierdo == None and raiz.derecho == None:
+                return None
+            if raiz.izquierdo == None:
+                return raiz.derecho
+            if raiz.derecho == None:
+                return raiz.izquierdo
+            minimo = self.valorMinimo(raiz.derecho)
+            raiz.clave = minimo
+            raiz.derecho = self.eliminarRec(raiz.derecho, minimo)
+        return raiz
+
+    def valorMinimo(self, nodo):
+        while nodo.izquierdo != None:
+            nodo = nodo.izquierdo
+        return nodo.clave
+
+arbol = ArbolBinario()
+arbol.insertar(50)
+arbol.insertar(30)
+arbol.insertar(20)
+arbol.insertar(40)
+arbol.insertar(70)
+arbol.insertar(60)
+arbol.insertar(80)
+
+print("Inorden:")
+arbol.inorden()
+print("\nPreorden:")
+arbol.preorden()
+print("\nPostorden:")
+arbol.postorden()
+
+print("\n\nBUSQUEDA")
+claveBuscada = 40
+if arbol.buscar(claveBuscada):
+    print("La clave", claveBuscada, "se encontro.")
+else:
+    print("La clave", claveBuscada, "no se encontro.")
+
+print("\nELIMINACION")
+nodo = 20
+arbol.eliminar(nodo)
+print("Despues de eliminar", nodo)
+arbol.inorden()
+
+nodo = 70
+arbol.eliminar(nodo)
+print("\nDespues de eliminar", nodo)
+arbol.inorden()
+
+nodo = 50
+arbol.eliminar(nodo)
+print("\nDespues de eliminar", nodo)
+arbol.inorden()
